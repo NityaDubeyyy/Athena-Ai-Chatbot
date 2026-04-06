@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Poppins:wght@400;600;700&display=swap');
+/* import new font i.e outfit through google fonts */
+
+@import "tailwindcss";
+
+* {
+    font-family: "Outfit", sans-serif;
+}
+
+/* Custom colors using Tailwind CSS */
+:root {
+    --color-primary: #E6CCFF;
+}
+
+:root:not(.dark) {
+    color: #111 !important;
+    background-color: #fff;
+}
+
+:root:not(.dark) .text-gray-500,
+:root:not(.dark) .text-gray-600,
+:root:not(.dark) .text-gray-700,
+:root:not(.dark) .text-gray-400,
+:root:not(.dark) .text-gray-300,
+:root:not(.dark) .text-gray-200 {
+    color: #111 !important;
+}
+
+:root:not(.dark) .bg-white {
+    background-color: #ffffff !important;
+}
+
+:root:not(.dark) .border-gray-200,
+:root:not(.dark) .border-gray-300,
+:root:not(.dark) .border-gray-400,
+:root:not(.dark) .border-gray-500 {
+    border-color: rgba(17, 17, 17, 0.12) !important;
+}
+
+/* formatting in response of gpt */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+/* Basic Typography fallback since @tailwindcss/typography is not installed */
+.prose p {
+    margin-bottom: 0.75rem;
+}
+.prose h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.prose h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.prose h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+.prose ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+.prose ol {
+    list-style-type: decimal;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+.prose li {
+    margin-bottom: 0.25rem;
+}
+.prose strong {
+    font-weight: 700;
+}
+.prose a {
+    color: #a855f7;
+    text-decoration: underline;
+}
+.prose > :first-child {
+    margin-top: 0;
+}
+.prose > :last-child {
+    margin-bottom: 0;
+}
+/* Custom Utilities */
+/* Custom Utilities */
+.glass {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.dark .glass {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+}
+
+.dark .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.gradient-text {
+    background: linear-gradient(to right, #a855f7, #ec4899);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.loader div:nth-last-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loader div:nth-last-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* 3D Transform Utilities */
+.perspective-1000 {
+    perspective: 1000px;
+}
+
+.preserve-3d {
+    transform-style: preserve-3d;
+}
+
+.backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+    transform: rotateY(180deg);
+}
