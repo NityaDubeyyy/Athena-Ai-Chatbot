@@ -1,0 +1,9 @@
+{
+  "name": "athena-ai-chatbot",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npm start --prefix server",
+    "build": "npm install --prefix client && npm run build --prefix client && npm install --prefix server",
+    "install": "npm install --prefix server && npm install --prefix client"
+  }
+}

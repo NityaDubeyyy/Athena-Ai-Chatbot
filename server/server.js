@@ -12,8 +12,13 @@ import chatRoutes from './routes/chatRoutes.js';
 import messageRouter from './routes/messageRoutes.js';
 import creditRouter from './routes/creditRoutes.js';
 import { stripeWebhooks } from './controllers/webhooks.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 await connectDB();
@@ -35,6 +40,11 @@ app.use('/api/message', messageRouter)
 app.use('/api/credit', creditRouter)
 
 
+// SERVE CLIENT SIDE FILES
+app.use(express.static(path.join(__dirname, '../client/dist')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 
