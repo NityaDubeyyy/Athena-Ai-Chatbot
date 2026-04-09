@@ -13,27 +13,30 @@ import creditRouter from './routes/creditRoutes.js';
 import { stripeWebhooks } from './controllers/webhooks.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// MIDDLEWARE
+// MIDDLEWARE - CORS must be first
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  credentials: true
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Handle OPTIONS requests for CORS preflight
+// Handle preflight requests
 app.options('*', cors());
 
 // Special handling for Stripe webhooks (must be BEFORE express.json)
-app.post('/api/stripe', express.raw({ type: 'application/json' }), stripeWebhooks)
+app.post('/api/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
 
 // Global JSON parser for all other routes
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Middleware to ensure database connection
 const ensureDBConnection = async (req, res, next) => {
@@ -46,13 +49,11 @@ const ensureDBConnection = async (req, res, next) => {
     }
 };
 
-// Use database connection middleware for all API routes (EXCEPT stripe webhooks which already handled)
+// Use database connection middleware for all API routes (EXCEPT stripe webhooks)
 app.use('/api', (req, res, next) => {
     if (req.path === '/stripe') return next();
     return ensureDBConnection(req, res, next);
 });
-
-
 
 // Routes
 app.get('/api/health', (req, res) => {
@@ -64,28 +65,39 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/user', userRoutes);
-app.use('/api/chat', chatRoutes)
-app.use('/api/message', messageRouter)
-app.use('/api/credit', creditRouter)
+app.use('/api/chat', chatRoutes);
+app.use('/api/message', messageRouter);
+app.use('/api/credit', creditRouter);
 
-
-// SERVE CLIENT SIDE FILES (Only if dist exists)
+// SERVE CLIENT SIDE FILES
 const distPath = path.join(__dirname, '../client/dist');
-app.use(express.static(distPath));
 
-// Fallback for SPA routing - only if not an API route
-app.get(/(.*)/, (req, res) => {
+// Check if dist exists, if not create a fallback
+if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath, { 
+        maxAge: '1d',
+        etag: false 
+    }));
+}
+
+// SPA routing - serve index.html for non-API routes
+app.get('*', (req, res) => {
+    // Don't intercept API calls
     if (req.path.startsWith('/api')) {
         return res.status(404).json({ success: false, message: 'API endpoint not found' });
     }
     
     const indexPath = path.join(distPath, 'index.html');
-    res.sendFile(indexPath, (err) => {
-        if (err) {
-            // If file doesn't exist (e.g. on Vercel standalone server deployment), just send a message
-            res.status(200).send('Athena AI API is active. Please use the frontend to interact.');
-        }
-    });
+    
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath, (err) => {
+            if (err) {
+                res.status(200).send('Athena AI API is active');
+            }
+        });
+    } else {
+        res.status(200).send('Athena AI API is active. Client not built.');
+    }
 });
 
 const PORT = process.env.PORT || 4000;
@@ -99,8 +111,7 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     server.listen(PORT, () => {
         console.log(`
         ==================================================
-        🚀 SERVER UPDATED & RESTARTED SUCCESSFULLY 🚀
-        Image Generation Fix: APPLIED (Direct Pollinations URL)
+        🚀 SERVER STARTED SUCCESSFULLY 🚀
         Current Time: ${new Date().toLocaleTimeString()}
         ==================================================
         `);
