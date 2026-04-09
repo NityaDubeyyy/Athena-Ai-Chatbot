@@ -20,7 +20,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // MIDDLEWARE
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  credentials: true
+}));
+
+// Handle OPTIONS requests for CORS preflight
+app.options('*', cors());
 
 // Special handling for Stripe webhooks (must be BEFORE express.json)
 app.post('/api/stripe', express.raw({ type: 'application/json' }), stripeWebhooks)
