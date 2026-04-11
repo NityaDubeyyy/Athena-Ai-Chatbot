@@ -6,7 +6,7 @@
 //     urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
 // })
 // export default imageKit;
-import ImageKit from "imagekit";
+import ImageKit from "@imagekit/nodejs";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
