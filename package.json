@@ -2,10 +2,14 @@
   "name": "athena-ai-chatbot",
   "version": "1.0.0",
   "type": "module",
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
-    "start": "npm start --prefix server",
-    "dev": "npm run dev --prefix server",
-    "build": "cd client && npm install && npm run build && cd ../server && npm install",
-    "install": "npm install --prefix server && npm install --prefix client"
+    "start": "npm start -w server",
+    "dev": "npm run dev -w server",
+    "build": "npm run build -w client",
+    "install-all": "npm install"
   }
 }
